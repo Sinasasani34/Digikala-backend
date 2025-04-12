@@ -1,10 +1,10 @@
 const express = require('express');
 const { sequelize } = require('./config/sequelize.config');
+const { initDataBase } = require('./config/models.initial');
 require('dotenv').config();
 async function main() {
     const app = express();
-    require("./modules/product/product.model")
-    await sequelize.sync({ force: true });
+    await initDataBase()
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }));
     // not found...
