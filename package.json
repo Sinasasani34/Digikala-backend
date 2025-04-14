@@ -12,7 +12,12 @@
   "dependencies": {
     "@sequelize/mariadb": "^7.0.0-alpha.46",
     "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-ejs-layouts": "^2.5.1",
+    "express-validation": "^4.1.1",
+    "http-errors": "^2.0.0",
+    "http-status-codes": "^2.3.0",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
