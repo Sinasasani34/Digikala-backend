@@ -3,6 +3,7 @@ const { sequelize } = require('./config/sequelize.config');
 const { initDataBase } = require('./config/models.initial');
 const { productRoutes } = require('./modules/product/product.routes');
 const { authRoutes } = require('./modules/auth/auth.routes');
+const { baksetRoutes } = require('./modules/basket/basket.routes');
 require('dotenv').config();
 async function main() {
     // creating express application
@@ -14,6 +15,7 @@ async function main() {
     // using routes
     app.use("/auth", authRoutes);
     app.use("/product", productRoutes);
+    app.use("/basket", baksetRoutes);
     // not found...
     app.use((req, res, next) => {
         return res.status(404).json({

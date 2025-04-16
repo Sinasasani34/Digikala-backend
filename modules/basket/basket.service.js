@@ -53,7 +53,7 @@ async function addToBasketHandler(req, res, next) {
             } else {
                 throw createHttpError(400, "محصول در انبار موجود نمیباشد")
             }
-            await Basket.save()
+            await basket.save()
         } else {
             await Basket.create({ ...basketItem, count: 1 });
         }
