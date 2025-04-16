@@ -2,6 +2,7 @@ const express = require('express');
 const { sequelize } = require('./config/sequelize.config');
 const { initDataBase } = require('./config/models.initial');
 const { productRoutes } = require('./modules/product/product.routes');
+const { authRoutes } = require('./modules/auth/auth.routes');
 require('dotenv').config();
 async function main() {
     // creating express application
@@ -11,6 +12,7 @@ async function main() {
     // db connection
     await initDataBase()
     // using routes
+    app.use("/auth", authRoutes);
     app.use("/product", productRoutes);
     // not found...
     app.use((req, res, next) => {

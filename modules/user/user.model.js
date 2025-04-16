@@ -2,18 +2,10 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../config/sequelize.config");
 
 // creating user model
-const UserProfile = sequelize.define("user_profile", {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    fullname: { type: DataTypes.STRING, allowNull: false },
-    mobile: { type: DataTypes.STRING, allowNull: false },
-}, {
-    createdAt: "created_at",
-    updatedAt: false,
-    modelName: "user_profile"
-});
+
 const User = sequelize.define("user", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    fullname: { type: DataTypes.STRING, allowNull: false },
+    fullname: { type: DataTypes.STRING, allowNull: true },
     mobile: { type: DataTypes.STRING, allowNull: false },
     otpId: { type: DataTypes.INTEGER, allowNull: true },
 }, {
@@ -34,5 +26,4 @@ const Otp = sequelize.define("user_otp", {
 module.exports = {
     User,
     Otp,
-    UserProfile
 }
