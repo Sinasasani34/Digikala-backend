@@ -1,5 +1,5 @@
 const createHttpError = require("http-errors");
-const { Product, ProductColor } = require("../product/product.model");
+const { Product, ProductColor, ProductSize } = require("../product/product.model");
 const { ProductTypes } = require("../../common/constant/product.const");
 const { Basket } = require("./basket.model");
 const { StatusCodes } = require("http-status-codes");
@@ -42,29 +42,80 @@ async function addToBasketHandler(req, res, next) {
                 throw createHttpError(400, "محصول در انبار موجود نمیباشد")
             }
         }
+        // const basket = await Basket.findOne({ where: basketItem });
+        // if (basket) {
+        //     if (sizeCount && sizeCount > basket?.count) {
+        //         basket.count += 1;
+        //     } else if (colorCount && colorCount > basket?.count) {
+        //         basket.count += 1;
+        //     } else if (productCount && productCount > basket?.count) {
+        //         basket.count += 1;
+        //     } else {
+        //         throw createHttpError(400, "محصول در انبار موجود نمیباشد")
+        //     }
+        //     await basket.save()
+        // } else {
+        //     await basket.create({ ...basketItem, count: 1 });
+        // }
         const basket = await Basket.findOne({ where: basketItem });
+
         if (basket) {
-            if (sizeCount && sizeCount > basket?.count) {
+            if (sizeCount && sizeCount > basket.count) {
                 basket.count += 1;
-            } else if (colorCount && colorCount > basket?.count) {
+            } else if (colorCount && colorCount > basket.count) {
                 basket.count += 1;
-            } else if (productCount && productCount > basket?.count) {
+            } else if (productCount && productCount > basket.count) {
                 basket.count += 1;
             } else {
-                throw createHttpError(400, "محصول در انبار موجود نمیباشد")
+                throw createHttpError(400, "محصول در انبار موجود نمیباشد");
             }
-            await basket.save()
+            await basket.save();
         } else {
-            await Basket.create({ ...basketItem, count: 1 });
+            // استفاده از Basket.create به جای basket.create
+            await Basket.create({ ...basketItem, count: 1, sizeId: basketItem.sizeId });
         }
         return res.status(StatusCodes.CREATED).json({
             message: "محصول به سبد خرید اضافه شد",
         })
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+}
+
+async function getUserBasketHandler(req, res, next) {
+    try {
+        const { id: userId } = req.user;
+        console.log(userId)
+        const basket = await Basket.findAll({
+            where: { userId },
+            include: [
+                { model: Product, as: "product" },
+                { model: ProductColor, as: "color" },
+                { model: ProductSize, as: "size" },
+            ]
+        });
+        let totalAmount = 0;
+        let totalDiscount = 0;
+        let finalAmount = 0;
+        let finalBasket = [];
+
+        for (const item of basket) {
+            const { product, color, size, count } = item;// دقت کنید که در اینجا item یک object است
+            let productData = {
+                idL: product.id,
+                title: product.title,
+                price: product.price,
+                type: product.type
+            }
+        }
+        return res.json({ basket })
     } catch (error) {
         next(error)
     }
 }
 
 module.exports = {
-    addToBasketHandler
+    addToBasketHandler,
+    getUserBasketHandler
 }
