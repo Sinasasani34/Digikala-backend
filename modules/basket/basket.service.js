@@ -99,17 +99,86 @@ async function getUserBasketHandler(req, res, next) {
         let totalDiscount = 0;
         let finalAmount = 0;
         let finalBasket = [];
-
         for (const item of basket) {
             const { product, color, size, count } = item;// دقت کنید که در اینجا item یک object است
-            let productData = {
-                idL: product.id,
-                title: product.title,
-                price: product.price,
-                type: product.type
+            const productIndex = finalBasket.findIndex((item) => item.id === product.id);
+            let productData = finalBasket.find((item) => item.id === product.id);
+            if (!productData) {
+                productData = {
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    type: product.type,
+                    count,
+                    sizes: [],
+                    colors: [],
+                };
+            } else {
+                productData.count + count;
             }
+            if (product?.type == ProductTypes.Coloring && color) {
+                let price = color?.price * count;
+                totalAmount += price;
+                let discountAmount = 0;
+                let finalPrice = price;
+                if (color?.active_discount && color?.discount > 0) {
+                    discountAmount = price * (color?.discount / 100);
+                    totalDiscount += discountAmount;
+                }
+                finalPrice = (price - discountAmount);
+                finalAmount += finalPrice;
+                productData['colors'].push({
+                    id: color.id,
+                    color_name: color?.color_name,
+                    color_code: color?.color_code,
+                    price,
+                    discountAmount,
+                    finalPrice,
+                    count,
+                });
+            } else if (product?.type == ProductTypes.Sizing && size) {
+                let price = size?.price * count;
+                totalAmount += price;
+                let discountAmount = 0;
+                let finalPrice = price;
+                if (size?.active_discount && size?.discount > 0) {
+                    discountAmount = price * (size?.discount / 100);
+                    totalDiscount += discountAmount;
+                }
+                finalPrice = (price - discountAmount);
+                finalAmount += finalPrice;
+                productData['sizes'].push({
+                    id: size.id,
+                    size: size?.size,
+                    price,
+                    discountAmount,
+                    finalPrice,
+                    count,
+                });
+            } else if (product?.type == ProductTypes.Single && product) {
+                let price = product?.price * count;
+                totalAmount += price;
+                let discountAmount = 0;
+                let finalPrice = price;
+                if (product?.active_discount && product?.discount > 0) {
+                    discountAmount = price * (product?.discount / 100);
+                    totalDiscount += discountAmount;
+                }
+                finalPrice = (price - discountAmount);
+                finalAmount += finalPrice;
+                productData['finalPrice'] = finalPrice;
+                productData['discountAmount'] = discountAmount;
+            }
+
+            if (productIndex > -1) finalBasket[productIndex] = productData;
+            else finalBasket.push(productData);
         }
-        return res.json({ basket })
+        return res.json({
+            totalAmount,
+            totalDiscount,
+            finalAmount,
+            basket: finalBasket,
+        })
     } catch (error) {
         next(error)
     }
