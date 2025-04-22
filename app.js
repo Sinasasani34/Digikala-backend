@@ -4,6 +4,7 @@ const { initDataBase } = require('./config/models.initial');
 const { productRoutes } = require('./modules/product/product.routes');
 const { authRoutes } = require('./modules/auth/auth.routes');
 const { baksetRoutes } = require('./modules/basket/basket.routes');
+const { paymentRoutes } = require('./modules/payment/payment.routes');
 require('dotenv').config();
 async function main() {
     // creating express application
@@ -16,6 +17,7 @@ async function main() {
     app.use("/auth", authRoutes);
     app.use("/product", productRoutes);
     app.use("/basket", baksetRoutes);
+    app.use("/payment", paymentRoutes);
     // not found...
     app.use((req, res, next) => {
         return res.status(404).json({

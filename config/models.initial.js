@@ -1,5 +1,7 @@
 const { Basket } = require("../modules/basket/basket.model");
 const { Discount } = require("../modules/discount/discount.model");
+const { Order, OrderItems } = require("../modules/order/order.model");
+const { Payment } = require("../modules/payment/payment.model");
 const { Product, ProductDetail, ProductColor, ProductSize } = require("../modules/product/product.model");
 const { RefreshToken } = require("../modules/user/refreshToken.model");
 const { User, Otp } = require("../modules/user/user.model");
@@ -60,6 +62,31 @@ async function initDataBase() {
     Basket.belongsTo(Discount, { foreignKey: "discountId", targetKey: "id", as: "discount" });
     // Discount.sync({})
     // Basket.sync({})
+    // order
+    Order.hasMany(OrderItems, {
+        foreignKey: "orderId",
+        sourceKey: "id",
+        as: "items"
+    })
+    User.hasMany(Order, {
+        foreignKey: "userId",
+        sourceKey: "id",
+        as: "orders"
+    })
+    OrderItems.belongsTo(Order, {
+        foreignKey: "orderId",
+        targetKey: "id"
+    });
+    Order.hasOne(Payment, {
+        foreignKey: "orderId",
+        as: "payment",
+        sourceKey: "id",
+    })
+    Payment.hasOne(Order, {
+        foreignKey: "paymentId",
+        as: "order",
+        sourceKey: "id",
+    })
     // await sequelize.sync({ alter: true });
 }
 

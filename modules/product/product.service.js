@@ -51,7 +51,7 @@ async function createProductHandler(req, res, next) {
                     colorList.push({
                         color_name: item?.name,
                         color_code: item?.code,
-                        productId: item.id,
+                        productId: product.id,
                         price: item.price,
                         discount: item.discount,
                         active_discount: item.active_discount,
@@ -70,7 +70,7 @@ async function createProductHandler(req, res, next) {
                 for (const item of sizes) {
                     sizeList.push({
                         size: item?.size,
-                        productId: item.id,
+                        productId: product.id,
                         price: item.price,
                         discount: item.discount,
                         active_discount: item.active_discount,
