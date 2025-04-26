@@ -8,6 +8,7 @@ const Payment = sequelize.define("payment", {
     // get refrenc for problems of payment
     refId: { type: DataTypes.STRING, allowNull: true },
     authority: { type: DataTypes.STRING, allowNull: true },
+    userId: { type: DataTypes.INTEGER, allowNull: true },
     orderId: { type: DataTypes.INTEGER, allowNull: true },
 }, {
     modelName: "payment",

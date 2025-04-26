@@ -73,19 +73,27 @@ async function initDataBase() {
         sourceKey: "id",
         as: "orders"
     })
+
     OrderItems.belongsTo(Order, {
         foreignKey: "orderId",
         targetKey: "id"
     });
+    User.hasMany(Payment, {
+        foreignKey: "userId",
+        sourceKey: "id",
+        as: "payments"
+    })
     Order.hasOne(Payment, {
         foreignKey: "orderId",
         as: "payment",
         sourceKey: "id",
+        onDelete: "CASCADE"
     })
     Payment.hasOne(Order, {
         foreignKey: "paymentId",
         as: "order",
         sourceKey: "id",
+        onDelete: "CASCADE"
     })
     // await sequelize.sync({ alter: true });
 }

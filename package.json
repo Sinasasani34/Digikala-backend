@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@sequelize/mariadb": "^7.0.0-alpha.46",
+    "axios": "^1.8.4",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",

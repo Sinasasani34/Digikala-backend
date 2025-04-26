@@ -101,6 +101,7 @@ async function getUserBasketById(userId) {
             { model: ProductSize, as: "size" },
         ]
     });
+    if (basket?.length === 0) throw createHttpError(400, "سبد خرید شما خالی است")
     let totalAmount = 0;
     let totalDiscount = 0;
     let finalAmount = 0;
