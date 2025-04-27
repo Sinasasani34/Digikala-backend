@@ -3,6 +3,7 @@ const { Discount } = require("../modules/discount/discount.model");
 const { Order, OrderItems } = require("../modules/order/order.model");
 const { Payment } = require("../modules/payment/payment.model");
 const { Product, ProductDetail, ProductColor, ProductSize } = require("../modules/product/product.model");
+const { Role, RolePermission, Permission } = require("../modules/RBAC/rbac.model");
 const { RefreshToken } = require("../modules/user/refreshToken.model");
 const { User, Otp } = require("../modules/user/user.model");
 const { sequelize } = require("./sequelize.config");
@@ -159,6 +160,12 @@ async function initDataBase() {
         sourceKey: "id",
         onDelete: "CASCADE"
     })
+    //RBAC
+    Role.hasMany(RolePermission, { foreignKey: "roleId", sourceKey: "id", as: "permissions" })
+    Permission.hasMany(RolePermission, { foreignKey: "permissionId", sourceKey: "id", as: "roles" })
+    RolePermission.belongsTo(Role, { foreignKey: "roleId", targetKey: "id" })
+    RolePermission.belongsTo(Permission, { foreignKey: "permissionId", targetKey: "id" })
+
     // await sequelize.sync({ alter: true });
 }
 

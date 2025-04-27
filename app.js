@@ -26,11 +26,6 @@ async function main() {
             message: "Not Found Route"
         })
     })
-    // ejs and fornt
-    app.set('view engine', 'ejs');
-    app.get('/', function (req, res) {
-        res.render('pages/products');
-    });
     // error handeling
     app.use((err, req, res, next) => {
         const status = err?.status ?? err?.statusCode ?? 500;

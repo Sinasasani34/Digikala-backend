@@ -50,15 +50,62 @@ async function getOneOrderByIdHandler(req, res, next) {
     }
 }
 
-async function serInProcessStatusToOrder(req, res, next) {
+async function setPacketStatusToOrder(req, res, next) {
     const { id } = req.params;
     const order = await Order.findByPk(id);
     if (!order) throw createHttpError(404, "order not found");
+    if (order.status !== OrderStatus.InProcess) throw createHttpError(400, "order status should be in process");
+    order.status = OrderStatus.Packed;
+    await order.save();
+    return res.json({
+        message: "Set order to packet"
+    })
+
+}
+async function setInTransitStatusToOrder(req, res, next) {
+    const { id } = req.params;
+    const order = await Order.findByPk(id);
+    if (!order) throw createHttpError(404, "order not found");
+    if (order.status !== OrderStatus.Packed) throw createHttpError(400, "order status should be packet");
+    order.status = OrderStatus.InTransit;
+    await order.save();
+    return res.json({
+        message: "Set order to transit"
+    })
+
+}
+async function setCanceledStatusToOrder(req, res, next) {
+    const { id } = req.params;
+    const { reason } = req.params;
+    const order = await Order.findByPk(id);
+    if (!order) throw createHttpError(404, "order not found");
+    if ([OrderStatus.Pending, OrderStatus.Delivery, OrderStatus.Canceled].includes(order.status)) throw createHttpError(400, "please select correct order to cancel");
+    order.status = OrderStatus.Canceled;
+    order.reason = reason;
+    await order.save();
+    return res.json({
+        message: "order canceled successfuly"
+    })
+
+}
+async function setDeliverydStatusToOrder(req, res, next) {
+    const { id } = req.params;
+    const order = await Order.findByPk(id);
+    if (!order) throw createHttpError(404, "order not found");
+    if (order.status !== OrderStatus.InTransit) throw createHttpError(400, "order status should be in transit");
+    order.status = OrderStatus.Delivery;
+    await order.save();
+    return res.json({
+        message: "order delivry to cunstomer"
+    })
 
 }
 
 module.exports = {
     getMyOrdersHandler,
     getOneOrderByIdHandler,
-    serInProcessStatusToOrder
+    setPacketStatusToOrder,
+    setCanceledStatusToOrder,
+    setDeliverydStatusToOrder,
+    setInTransitStatusToOrder
 }
