@@ -6,6 +6,7 @@ const { authRoutes } = require('./modules/auth/auth.routes');
 const { baksetRoutes } = require('./modules/basket/basket.routes');
 const { paymentRoutes } = require('./modules/payment/payment.routes');
 const { orderRoutes } = require('./modules/order/order.routes');
+const { rbacRoutes } = require('./modules/RBAC/rbac.routes');
 require('dotenv').config();
 async function main() {
     // creating express application
@@ -20,6 +21,7 @@ async function main() {
     app.use("/basket", baksetRoutes);
     app.use("/payment", paymentRoutes);
     app.use("/order", orderRoutes);
+    app.use("/rbac", rbacRoutes)
     // not found...
     app.use((req, res, next) => {
         return res.status(404).json({
