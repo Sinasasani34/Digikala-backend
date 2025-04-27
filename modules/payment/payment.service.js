@@ -82,7 +82,7 @@ async function paymentVerifyHandler(req, res, next) {
                 payment.refId = result?.ref_id ?? "234212";
                 const order = await Order.findByPk(payment.orderId);
                 if (!order) throw createHttpError(404, "محصول یافت نشد")
-                order.status = OrderStatus.Ordered;
+                order.status = OrderStatus.InProcess;
                 await order.save();
                 await payment.save();
                 await Basket.destroy({ where: { userId: order.userId } });
@@ -94,7 +94,7 @@ async function paymentVerifyHandler(req, res, next) {
         }
         return res.redirect("http://frontenddomain.com/payment?status=failure")
     } catch (error) {
-        // next(error)
+        // next(error);
         res.redirect("http://frontenddomain.com/payment?status=failure")
     }
 }

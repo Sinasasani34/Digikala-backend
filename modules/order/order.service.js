@@ -50,7 +50,15 @@ async function getOneOrderByIdHandler(req, res, next) {
     }
 }
 
+async function serInProcessStatusToOrder(req, res, next) {
+    const { id } = req.params;
+    const order = await Order.findByPk(id);
+    if (!order) throw createHttpError(404, "order not found");
+
+}
+
 module.exports = {
     getMyOrdersHandler,
-    getOneOrderByIdHandler
+    getOneOrderByIdHandler,
+    serInProcessStatusToOrder
 }
