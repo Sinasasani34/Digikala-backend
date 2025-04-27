@@ -82,7 +82,7 @@ async function paymentVerifyHandler(req, res, next) {
                 payment.refId = result?.ref_id ?? "234212";
                 const order = await Order.findByPk(payment.orderId);
                 if (!order) throw createHttpError(404, "محصول یافت نشد")
-                order.status = OrderStatus.InProcess;
+                order.status = OrderStatus.Ordered;
                 await order.save();
                 await payment.save();
                 await Basket.destroy({ where: { userId: order.userId } });
